@@ -2,17 +2,18 @@ import { Link } from "react-router-dom";
 function Dashboard() {
   return (
     <div className="dashboard">
-      <aside>
+    <aside>
         <h2>Job Agent</h2>
 
-        <nav>
-          <p>▣ Dashboard</p>
-          <p>▤ My Applications</p>
-          <Link to="/jobs">⌕ Job Search</Link>
-          <p>♡ Saved Jobs</p>
-          <p>⚙ Settings</p>
-        </nav>
-      </aside>
+      <nav>
+        <Link to="/dashboard">▣ Dashboard</Link>
+        <Link to="/applications">▤ My Applications</Link>
+        <Link to="/jobs">⌕ Job Search</Link>
+        <Link to="/saved">♡ Saved Jobs</Link>
+        <Link to="/settings">⚙ Settings</Link>
+      </nav>
+
+    </aside>
 
       <main>
         <h1>Dashboard</h1>

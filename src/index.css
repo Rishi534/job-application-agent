@@ -24,9 +24,21 @@ aside h2 {
   margin-bottom: 40px;
 }
 
-nav p {
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
   padding: 10px;
-  cursor: pointer;
+}
+
+nav a:hover {
+  background: #1d2b8f;
+  border-radius: 6px;
 }
 
 main {
@@ -56,4 +68,40 @@ section {
   padding: 25px;
   border-radius: 10px;
   max-width: 700px;
+}
+
+.search {
+  display: flex;
+  gap: 10px;
+  margin: 25px 0;
+}
+
+.search input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.search button,
+.job-card button {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.jobs {
+  display: grid;
+  gap: 15px;
+  max-width: 750px;
+}
+
+.job-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.job-card h2 {
+  margin-top: 0;
 }

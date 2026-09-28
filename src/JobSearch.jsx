@@ -1,16 +1,34 @@
 function JobSearch() {
   const jobs = [
-    { company: "TCS", role: "Java Developer", location: "Pune" },
-    { company: "Infosys", role: "React Developer", location: "Bangalore" },
-    { company: "Cognizant", role: "Software Engineer", location: "Chennai" },
-    { company: "Accenture", role: "Full Stack Developer", location: "Hyderabad" }
+    {
+      company: "Cognizant",
+      role: "Software Engineer",
+      location: "Chennai",
+      skills: "Java, SQL, React",
+    },
+    {
+      company: "TCS",
+      role: "Java Developer",
+      location: "Pune",
+      skills: "Java, Spring Boot, SQL",
+    },
+    {
+      company: "Infosys",
+      role: "React Developer",
+      location: "Bangalore",
+      skills: "React, JavaScript, Node",
+    },
   ];
 
   return (
     <main>
-      <h1>Job Search</h1>
+      <h1>Find Jobs</h1>
 
-      <input placeholder="Search jobs..." />
+      <div className="search">
+        <input placeholder="Job title or skill" />
+        <input placeholder="Location" />
+        <button>Search</button>
+      </div>
 
       <div className="jobs">
         {jobs.map((job) => (
@@ -18,6 +36,7 @@ function JobSearch() {
             <h2>{job.role}</h2>
             <p>{job.company}</p>
             <p>{job.location}</p>
+            <p>{job.skills}</p>
             <button>View Job</button>
           </div>
         ))}

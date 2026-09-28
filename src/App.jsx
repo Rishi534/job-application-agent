@@ -1,44 +1,16 @@
-import { useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "./Login";
 import Dashboard from "./Dashboard";
+import JobSearch from "./JobSearch";
 
 function App() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  function login(e) {
-    e.preventDefault();
-
-    if (email && password) {
-      setLoggedIn(true);
-    }
-  }
-
-  if (loggedIn) {
-    return <Dashboard />;
-  }
-
   return (
-    <div>
-      <h1>Job Agent</h1>
-
-      <form onSubmit={login}>
-        <input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button>Login</button>
-      </form>
-    </div>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/jobs" element={<JobSearch />} />
+      <Route path="*" element={<Navigate to="/login" />} />
+    </Routes>
   );
 }
 
