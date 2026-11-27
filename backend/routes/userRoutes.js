@@ -64,6 +64,57 @@ userRegistrationRouter.post("/register", async (req, res) => {
   }
 });
 
+const verifyUserToken = require("../middleware/authMiddleware");
+
+// Get logged-in user's profile & skills
+userRegistrationRouter.get("/profile", verifyUserToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select("-passwordHash");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(200).json({ user });
+  } catch (error) {
+    return res.status(500).json({ message: "Unable to fetch user profile" });
+  }
+});
+
+// Update logged-in user's skills & job preferences
+userRegistrationRouter.put("/profile", verifyUserToken, async (req, res) => {
+  try {
+    const { skills, preferredRole, preferredLocation } = req.body || {};
+    const updates = {};
+
+    if (Array.isArray(skills)) {
+      updates.skills = skills.map((s) => s.trim()).filter(Boolean);
+    }
+    if (typeof preferredRole === "string") {
+      updates.preferredRole = preferredRole.trim();
+    }
+    if (typeof preferredLocation === "string") {
+      updates.preferredLocation = preferredLocation.trim();
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.userId,
+      { $set: updates },
+      { new: true, runValidators: true }
+    ).select("-passwordHash");
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser
+    });
+  } catch (error) {
+    console.error("Updating profile failed:", error.message);
+    return res.status(500).json({ message: "Unable to update profile" });
+  }
+});
+
 module.exports = userRegistrationRouter;
 
 

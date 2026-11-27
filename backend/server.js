@@ -7,6 +7,15 @@ const applicationRouter = require("./routes/applicationRoutes");
 
 const jobRoutes = require("./routes/jobRoutes");
 const userRegistrationRouter = require("./routes/userRoutes");
+const savedJobRouter = require("./routes/savedJobRoutes");
+
+console.log(
+  "Saved Jobs route list:",
+  savedJobRouter.stack.map((layer) => ({
+    path: layer.route?.path,
+    methods: layer.route?.methods
+  }))
+);
 
 const app = express();
 
@@ -19,6 +28,8 @@ app.use(express.json());
 app.use("/api/jobs", jobRoutes);
 app.use("/api/users", userRegistrationRouter);
 app.use("/api/applications", applicationRouter);
+console.log("Registering Saved Jobs endpoint");
+app.use("/api/saved-jobs", savedJobRouter);
 
 app.get("/api/users/profile", verifyUserToken, (req, res) => {
   res.status(200).json({

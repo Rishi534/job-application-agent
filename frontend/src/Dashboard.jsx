@@ -1,38 +1,48 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 function Dashboard() {
   const [applications, setApplications] = useState([]);
+  const [savedJobsCount, setSavedJobsCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchApplications = async () => {
+    const fetchDashboardData = async () => {
       try {
         const token = localStorage.getItem("token");
 
         if (!token) {
-          setError("Please log in to view your applications.");
+          setError("Please log in to view your dashboard.");
           return;
         }
 
-        const response = await fetch(
-          "http://localhost:5000/api/applications",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
+        const headers = {
+          Authorization: `Bearer ${token}`
+        };
 
-        const data = await response.json();
+        const [appsResponse, savedResponse] = await Promise.all([
+          fetch("http://localhost:5000/api/applications", { headers }),
+          fetch("http://localhost:5000/api/saved-jobs", { headers })
+        ]);
 
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to fetch applications");
+        const appsData = await appsResponse.json();
+        const savedData = await savedResponse.json();
+
+        if (!appsResponse.ok) {
+          throw new Error(appsData.message || "Failed to fetch applications");
         }
 
-        setApplications(data.applications || []);
+        if (!savedResponse.ok) {
+          throw new Error(savedData.message || "Failed to fetch saved jobs");
+        }
+
+        setApplications(appsData.applications || []);
+        setSavedJobsCount(
+          typeof savedData.count === "number"
+            ? savedData.count
+            : (savedData.savedJobs || []).length
+        );
       } catch (err) {
         setError(err.message || "Unable to connect to the server.");
       } finally {
@@ -40,7 +50,7 @@ function Dashboard() {
       }
     };
 
-    fetchApplications();
+    fetchDashboardData();
   }, []);
 
   const interviewCount = applications.filter(
@@ -58,7 +68,7 @@ function Dashboard() {
           <Link to="/dashboard">▣ Dashboard</Link>
           <Link to="/applications">▤ My Applications</Link>
           <Link to="/jobs">⌕ Job Search</Link>
-          <Link to="/saved">♡ Saved Jobs</Link>
+          <Link to="/saved-jobs">♡ Saved Jobs</Link>
           <Link to="/settings">⚙ Settings</Link>
         </nav>
       </aside>
@@ -80,7 +90,7 @@ function Dashboard() {
 
           <div>
             <h3>Saved Jobs</h3>
-            <strong>8</strong>
+            <strong>{loading ? "..." : savedJobsCount}</strong>
           </div>
         </div>
 
